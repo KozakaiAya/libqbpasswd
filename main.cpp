@@ -1,7 +1,7 @@
 // libqbpasswd front end
 // accepts a plain password and returns the encoded value
 
-include "password.h"
+#include "password.h"
 
 #include <iostream>
 #include <string>
