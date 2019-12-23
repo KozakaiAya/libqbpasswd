@@ -35,18 +35,8 @@ std::string Password::generate(const std::string& password)
     if (hmacResult != 1)
         return {};
 
-    const std::string saltView = reinterpret_cast<const char *>(salt.data());
-    const std::string outBufView = reinterpret_cast<const char *>(outBuf.data());
-
-    #ifdef DEBUG
-
-    std::cout << "SaltView: " << saltView << std::endl;
-    std::cout << "outBufView: " << outBufView << std::endl;
-
-    #endif
-
-    std::string ret = base64_encode(reinterpret_cast<unsigned char const*>(saltView.c_str()), saltView.length()) 
-        + ":" + base64_encode(reinterpret_cast<unsigned char const*>(outBufView.c_str()), outBufView.length());
+    std::string ret = base64_encode(reinterpret_cast<unsigned char const*>(salt.data()), sizeof(salt[0]) * salt.size()) 
+        + ":" + base64_encode(reinterpret_cast<unsigned char const*>(outBuf.data()), sizeof(outBuf[0]) * outBuf.size());
     
     return ret;
 }
