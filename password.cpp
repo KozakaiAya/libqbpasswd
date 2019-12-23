@@ -2,10 +2,17 @@
 #include "random.h"
 #include "base64.h"
 
+#include "debug.h"
+
 #include <codecvt>
 #include <locale>
 #include <array>
 
+#ifdef DEBUG
+
+#include <iostream>
+
+#endif
 
 std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
 
@@ -30,6 +37,13 @@ std::string Password::generate(const std::string& password)
 
     const std::string saltView = reinterpret_cast<const char *>(salt.data());
     const std::string outBufView = reinterpret_cast<const char *>(outBuf.data());
+
+    #ifdef DEBUG
+
+    std::cout << "SaltView: " << saltView << std::endl;
+    std::cout << "outBufView: " << outBufView << std::endl;
+
+    #endif
 
     std::string ret = base64_encode(reinterpret_cast<unsigned char const*>(saltView.c_str()), saltView.length()) 
         + ":" + base64_encode(reinterpret_cast<unsigned char const*>(outBufView.c_str()), outBufView.length());
