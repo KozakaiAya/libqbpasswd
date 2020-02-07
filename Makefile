@@ -1,8 +1,13 @@
 CPPFLAGS = -Wall -std=c++11 -O2
 LDFLAGS = -lssl -lcrypto
+STATIC_LDFLAGS = -l:libcrypto.a -lssl -ldl -pthread
 
 all: base64.o password.o random.o main.o
 	g++ $(CPPFLAGS) -o qb_password_gen base64.o random.o password.o main.o $(LDFLAGS)
+	rm *.o
+
+static_build: base64.o password.o random.o main.o
+	g++ $(CPPFLAGS) -o qb_password_gen_static base64.o random.o password.o main.o $(STATIC_LDFLAGS)
 	rm *.o
 
 base64.o: base64.cpp base64.h
@@ -17,3 +22,5 @@ main.o: main.cpp password.h
 clean:
 	-rm *.o
 	-rm qb_password_gen
+	-rm qb_password_gen_static
+	
