@@ -1,15 +1,15 @@
 CPPFLAGS_STATIC = -Ibuild/include
 CXXFLAGS = -Wall -std=c++11 -O2
 LDFLAGS = -lssl -lcrypto
-LDFLAGS_STATIC = -Lbuild/lib -lssl -lcrypto -ldl -static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
+LDFLAGS_STATIC = -Lbuild/lib -l:libcrypto.a -lssl -ldl -static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
 
 all: base64.o password.o random.o main.o
 	g++ $(CXXFLAGS) -o qb_password_gen base64.o random.o password.o main.o $(LDFLAGS)
 	rm *.o
 
 static_build: build_openssl base64.o password_s.o random.o main_s.o
-	g++ $(CXXFLAGS) -o qb_password_gen_static base64.o random.o password_s.o main_s.o $(STATIC_LDFLAGS)
-#	rm *.o
+	g++ $(CPPFLAGS_STATIC) $(CXXFLAGS) -o qb_password_gen_static base64.o random.o password_s.o main_s.o $(LDFLAGS_STATIC)
+	rm *.o
 
 base64.o: base64.cpp base64.h
 	g++ $(CXXFLAGS) -c base64.cpp
@@ -23,13 +23,14 @@ main.o: main.cpp password.h
 password_s.o: build_openssl password.cpp password.h base64.h random.h
 	g++ $(CPPFLAGS_STATIC) $(CXXFLAGS) -c password.cpp -o password_s.o 
 main_s.o: build_openssl main.cpp password.h
-	g++ $(CPPFLAGS_STATIC) $(CXXFLAGS) -c main.cpp -o main_s.o
+	g++ $(CPPFLAGS_STATIC) $(CXXFLAGS) -c main.cpp -o main_s.o 
 
 .PHONY: build_openssl
 build_openssl:
-	$(shell ./build_openssl.sh)
+	./build_openssl.sh
 
 clean:
+	-rm -rf build
 	-rm *.o
 	-rm qb_password_gen
 	-rm qb_password_gen_static
