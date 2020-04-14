@@ -1,7 +1,7 @@
 CPPFLAGS_STATIC = -Ibuild/include
-CXXFLAGS = -Wall -std=c++11 -O2
-LDFLAGS = -lssl -lcrypto
-LDFLAGS_STATIC = -Lbuild/lib -lcrypto -lssl -ldl -static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
+CXXFLAGS = -Wall -std=c++11 -Ofast
+LDFLAGS = -lssl -lcrypto -s
+LDFLAGS_STATIC = -s -Lbuild/lib -lcrypto -lssl -ldl -static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
 
 all: base64.o password.o random.o main.o
 	g++ $(CXXFLAGS) -o qb_password_gen base64.o random.o password.o main.o $(LDFLAGS)
