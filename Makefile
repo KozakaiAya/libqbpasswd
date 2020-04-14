@@ -8,8 +8,8 @@ all: base64.o password.o random.o main.o
 	rm *.o
 
 static_build: build_openssl base64.o password_s.o random.o main_s.o
-	g++ $(CXXFLAGS) -o qb_password_gen_static base64.o random.o password_s.o main.o $(STATIC_LDFLAGS)
-	rm *.o
+	g++ $(CXXFLAGS) -o qb_password_gen_static base64.o random.o password_s.o main_s.o $(STATIC_LDFLAGS)
+#	rm *.o
 
 base64.o: base64.cpp base64.h
 	g++ $(CXXFLAGS) -c base64.cpp
@@ -25,7 +25,7 @@ password_s.o: build_openssl password.cpp password.h base64.h random.h
 main_s.o: build_openssl main.cpp password.h
 	g++ $(CPPFLAGS_STATIC) $(CXXFLAGS) -c main.cpp -o main_s.o
 
-.PHONY build_openssl
+.PHONY: build_openssl
 build_openssl:
 	$(shell ./build_openssl.sh)
 
